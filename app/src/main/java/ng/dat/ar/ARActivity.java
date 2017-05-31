@@ -228,6 +228,7 @@ public class ARActivity extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onLocationChanged(Location location) {
+        this.location = location;
         updateLatestLocation();
     }
 
