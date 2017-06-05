@@ -166,8 +166,10 @@ public class ARCamera extends ViewGroup implements SurfaceHolder.Callback {
 
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
         final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio = (double) width / height;
-        if (sizes == null) return null;
+        double targetRatio = (double) height / width;
+
+        if (sizes == null)
+            return null;
 
         Camera.Size optimalSize = null;
         double minDiff = Double.MAX_VALUE;
@@ -175,10 +177,9 @@ public class ARCamera extends ViewGroup implements SurfaceHolder.Callback {
         int targetHeight = height;
 
         for (Camera.Size size : sizes) {
-            double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) {
+            double ratio = (double) size.height / size.width;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
                 continue;
-            }
 
             if (Math.abs(size.height - targetHeight) < minDiff) {
                 optimalSize = size;
@@ -196,10 +197,6 @@ public class ARCamera extends ViewGroup implements SurfaceHolder.Callback {
             }
         }
 
-        if(optimalSize == null) {
-            optimalSize = sizes.get(0);
-        }
-
         return optimalSize;
     }
 
@@ -207,11 +204,8 @@ public class ARCamera extends ViewGroup implements SurfaceHolder.Callback {
         if(camera != null) {
             this.cameraWidth = width;
             this.cameraHeight = height;
-
             Camera.Parameters params = camera.getParameters();
-            List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
-            previewSize = previewSizes.get(0);
-            params.setPreviewSize(previewSize.width, previewSize.height);
+            params.setPictureSize(previewSize.width, previewSize.height);
             requestLayout();
 
             camera.setParameters(params);
